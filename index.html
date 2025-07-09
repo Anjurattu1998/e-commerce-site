@@ -373,36 +373,96 @@
       margin-bottom: 10px;
     }
 
+    /* Enhanced Mobile Media Query */
     @media (max-width: 768px) {
       .hero h1 {
-        font-size: 36px;
+        font-size: 32px;
       }
       .hero p {
-        font-size: 16px;
+        font-size: 14px;
       }
       header {
-        padding: 15px 25px;
+        padding: 15px 20px;
+        flex-wrap: wrap;
+        gap: 10px;
       }
       nav ul {
-        gap: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+      }
+      nav a {
+        padding: 8px 14px;
+        font-size: 15px;
       }
       .product-grid {
-        padding: 0 20px 50px;
-        gap: 25px;
+        padding: 0 15px 50px;
+        gap: 20px;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       }
       .product-card img {
-        height: 250px;
+        height: 220px;
+      }
+      .product-card h3 {
+        font-size: 18px;
+      }
+      .product-card p {
+        font-size: 16px;
+      }
+      .product-card button {
+        font-size: 16px;
+        padding: 10px 0;
       }
       .cart {
-        padding: 25px 30px;
+        padding: 20px 25px;
         margin: 40px 15px 60px;
+      }
+      .cart h2 {
+        font-size: 24px;
+      }
+      .cart li {
+        font-size: 15px;
+        padding: 12px 0;
+        gap: 12px;
+      }
+      .cart li img {
+        width: 50px;
+        height: 50px;
+      }
+      .cart button.remove {
+        padding: 6px 12px;
+        font-size: 14px;
+      }
+      .cart .total {
+        font-size: 20px;
+      }
+      #checkout-btn {
+        font-size: 18px;
+        padding: 12px 30px;
+        width: 100%;
       }
       #checkout-form {
         margin: 20px 15px 0;
         padding: 20px;
+        max-width: 100%;
+      }
+      #checkout-form label {
+        font-size: 14px;
+      }
+      #checkout-form input,
+      #checkout-form textarea {
+        font-size: 14px;
+        padding: 10px 12px;
+      }
+      #checkout-form button {
+        font-size: 18px;
+        padding: 12px 0;
+      }
+      footer {
+        font-size: 14px;
+        padding: 20px 15px;
       }
     }
-    
   </style>
 </head>
 <body>
@@ -449,116 +509,127 @@
       <p>$34.99</p>
       <button onclick="addToCart('Compact Sling Bag', 34.99, 'product4.jpg')" aria-label="Add Compact Sling Bag to cart">Add to Cart</button>
     </article>
-    <article class="product-card" role="listitem" tabindex="0" aria-label="Elegant Tote Bag for $69.99">
-      <img src="product5.jpg" alt="Elegant Tote Bag" loading="lazy" />
-      <h3>Elegant Tote Bag</h3>
-      <p>$69.99</p>
-      <button onclick="addToCart('Elegant Tote Bag', 69.99, 'product5.jpg')" aria-label="Add Elegant Tote Bag to cart">Add to Cart</button>
-    </article>
-    <article class="product-card" role="listitem" tabindex="0" aria-label="Leather Messenger Bag for $79.99">
-      <img src="product6.jpg" alt="Leather Messenger Bag" loading="lazy" />
-      <h3>Leather Messenger Bag</h3>
-      <p>$79.99</p>
-      <button onclick="addToCart('Leather Messenger Bag', 79.99, 'product6.jpg')" aria-label="Add Leather Messenger Bag to cart">Add to Cart</button>
-    </article>
   </div>
 
-  <section class="cart" id="cart" aria-label="Shopping Cart">
-    <h2>Your Shopping Cart</h2>
-    <ul id="cart-items" role="list" aria-live="polite" aria-relevant="additions removals"></ul>
-    <p class="total" aria-live="polite">Total: $0.00</p>
-    <button id="checkout-btn" disabled>Checkout</button>
-    <p id="success-message" role="alert">Thank you for your purchase!</p>
+  <section class="cart" id="cart" aria-live="polite" aria-atomic="true">
+    <h2>Your Cart</h2>
+    <ul id="cart-items" tabindex="0" aria-label="Shopping cart items">
+      <!-- Cart items added here dynamically -->
+    </ul>
+    <div class="total" id="cart-total">Total: $0.00</div>
+    <button id="checkout-btn" aria-controls="checkout-form" aria-expanded="false" onclick="toggleCheckout()">Proceed to Checkout</button>
+    <div id="success-message" role="alert"></div>
   </section>
 
-  <form id="checkout-form" aria-label="Checkout Form">
-    <label for="name">Name</label>
-    <input id="name" type="text" name="name" required autocomplete="name" />
+  <form id="checkout-form" aria-label="Checkout form" onsubmit="submitOrder(event)">
+    <label for="name">Full Name</label>
+    <input type="text" id="name" name="name" required placeholder="Your full name" />
 
-    <label for="email">Email</label>
-    <input id="email" type="email" name="email" required autocomplete="email" />
+    <label for="email">Email Address</label>
+    <input type="email" id="email" name="email" required placeholder="your.email@example.com" />
 
     <label for="address">Shipping Address</label>
-    <textarea id="address" name="address" rows="4" required autocomplete="street-address"></textarea>
+    <textarea id="address" name="address" required placeholder="Your shipping address" rows="3"></textarea>
 
-    <button type="submit">Confirm Purchase</button>
+    <button type="submit">Place Order</button>
   </form>
 
   <footer>
-    <p>© 2025 BagStore. All rights reserved.</p>
-    <p>Designed with ❤️ by You</p>
+    <p>© 2025 SA BagStore. All rights reserved.</p>
+    <p>Contact: support@sabagstore.com</p>
   </footer>
 
   <script>
     const cartItemsEl = document.getElementById('cart-items');
-    const totalEl = document.querySelector('.total');
+    const cartTotalEl = document.getElementById('cart-total');
+    const successMessageEl = document.getElementById('success-message');
     const checkoutBtn = document.getElementById('checkout-btn');
-    const successMessage = document.getElementById('success-message');
     const checkoutForm = document.getElementById('checkout-form');
 
     let cart = [];
 
-    function addToCart(name, price, img) {
-      cart.push({ name, price, img });
+    function addToCart(name, price, imgSrc) {
+      const existingItem = cart.find(item => item.name === name);
+      if (existingItem) {
+        existingItem.qty++;
+      } else {
+        cart.push({name, price, imgSrc, qty: 1});
+      }
       renderCart();
+      successMessageEl.style.display = 'none';
+      checkoutForm.style.display = 'none';
+      checkoutBtn.setAttribute('aria-expanded', 'false');
+    }
+
+    function renderCart() {
+      cartItemsEl.innerHTML = '';
+      if (cart.length === 0) {
+        cartItemsEl.innerHTML = '<li>Your cart is empty.</li>';
+        cartTotalEl.textContent = 'Total: $0.00';
+        return;
+      }
+      let total = 0;
+      cart.forEach(({name, price, imgSrc, qty}, index) => {
+        total += price * qty;
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <img src="${imgSrc}" alt="${name}" />
+          <span>${name} (x${qty})</span>
+          <span>$${(price * qty).toFixed(2)}</span>
+          <button class="remove" aria-label="Remove ${name} from cart" onclick="removeFromCart(${index})">Remove</button>
+        `;
+        cartItemsEl.appendChild(li);
+      });
+      cartTotalEl.textContent = `Total: $${total.toFixed(2)}`;
     }
 
     function removeFromCart(index) {
       cart.splice(index, 1);
       renderCart();
-    }
-
-    function renderCart() {
-      cartItemsEl.innerHTML = '';
-      let total = 0;
-
-      if(cart.length === 0){
-        cartItemsEl.innerHTML = '<li>Your cart is empty.</li>';
-        checkoutBtn.disabled = true;
-        checkoutForm.style.display = 'none';
-        successMessage.style.display = 'none';
-        totalEl.textContent = 'Total: $0.00';
-        return;
-      }
-
-      cart.forEach((item, i) => {
-        total += item.price;
-        const li = document.createElement('li');
-        li.innerHTML = `
-          <img src="${item.img}" alt="${item.name}" />
-          <span>${item.name}</span>
-          <span>$${item.price.toFixed(2)}</span>
-          <button class="remove" aria-label="Remove ${item.name} from cart" onclick="removeFromCart(${i})">Remove</button>
-        `;
-        cartItemsEl.appendChild(li);
-      });
-
-      totalEl.textContent = `Total: $${total.toFixed(2)}`;
-      checkoutBtn.disabled = false;
-      successMessage.style.display = 'none';
+      successMessageEl.style.display = 'none';
       checkoutForm.style.display = 'none';
+      checkoutBtn.setAttribute('aria-expanded', 'false');
     }
 
-    checkoutBtn.addEventListener('click', () => {
-      checkoutForm.style.display = 'block';
-      window.scrollTo({ top: checkoutForm.offsetTop, behavior: 'smooth' });
-    });
-
-    checkoutForm.addEventListener('submit', e => {
-      e.preventDefault();
-
+    function toggleCheckout() {
       if (cart.length === 0) {
-        alert('Your cart is empty!');
+        alert("Your cart is empty! Please add items before checking out.");
         return;
       }
+      const isVisible = checkoutForm.style.display === 'block';
+      checkoutForm.style.display = isVisible ? 'none' : 'block';
+      successMessageEl.style.display = 'none';
+      checkoutBtn.setAttribute('aria-expanded', !isVisible);
+      checkoutForm.scrollIntoView({behavior: 'smooth'});
+    }
 
-      cart = [];
-      renderCart();
-      checkoutForm.style.display = 'none';
-      successMessage.style.display = 'block';
-      checkoutForm.reset();
-    });
+    function submitOrder(event) {
+      event.preventDefault();
+      if (cart.length === 0) {
+        alert("Your cart is empty! Please add items before placing order.");
+        return;
+      }
+      const name = event.target.name.value.trim();
+      const email = event.target.email.value.trim();
+      const address = event.target.address.value.trim();
+      if (!name || !email || !address) {
+        alert("Please fill all fields.");
+        return;
+      }
+      // Simulate order processing delay
+      setTimeout(() => {
+        successMessageEl.textContent = `Thank you, ${name}! Your order has been placed successfully.`;
+        successMessageEl.style.display = 'block';
+        cart = [];
+        renderCart();
+        checkoutForm.style.display = 'none';
+        checkoutBtn.setAttribute('aria-expanded', 'false');
+        checkoutForm.reset();
+        checkoutBtn.scrollIntoView({behavior: 'smooth'});
+      }, 1000);
+    }
 
+    // Initial cart render
     renderCart();
   </script>
 
