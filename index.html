@@ -373,94 +373,58 @@
       margin-bottom: 10px;
     }
 
-    /* Enhanced Mobile Media Query */
     @media (max-width: 768px) {
-      .hero h1 {
-        font-size: 32px;
-      }
-      .hero p {
-        font-size: 14px;
-      }
+      /* Header responsive fixes */
       header {
-        padding: 15px 20px;
         flex-wrap: wrap;
+        padding: 15px 20px;
+        justify-content: center;
         gap: 10px;
       }
+      .logo {
+        flex: 1 1 100%;
+        text-align: center;
+        font-size: 28px;
+      }
+      nav {
+        flex: 1 1 100%;
+        text-align: center;
+      }
       nav ul {
-        flex-wrap: wrap;
         justify-content: center;
-        gap: 15px;
-      }
-      nav a {
-        padding: 8px 14px;
-        font-size: 15px;
-      }
-      .product-grid {
-        padding: 0 15px 50px;
-        gap: 20px;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      }
-      .product-card img {
-        height: 220px;
-      }
-      .product-card h3 {
-        font-size: 18px;
-      }
-      .product-card p {
-        font-size: 16px;
-      }
-      .product-card button {
-        font-size: 16px;
-        padding: 10px 0;
-      }
-      .cart {
-        padding: 20px 25px;
-        margin: 40px 15px 60px;
-      }
-      .cart h2 {
-        font-size: 24px;
-      }
-      .cart li {
-        font-size: 15px;
-        padding: 12px 0;
+        flex-wrap: wrap;
         gap: 12px;
       }
-      .cart li img {
-        width: 50px;
-        height: 50px;
+      nav li {
+        margin: 0;
       }
-      .cart button.remove {
-        padding: 6px 12px;
-        font-size: 14px;
+      nav a {
+        padding: 8px 12px;
+        font-size: 15px;
+        display: inline-block;
       }
-      .cart .total {
-        font-size: 20px;
+
+      /* Other responsive adjustments */
+      .hero h1 {
+        font-size: 36px;
       }
-      #checkout-btn {
-        font-size: 18px;
-        padding: 12px 30px;
-        width: 100%;
+      .hero p {
+        font-size: 16px;
+      }
+      .product-grid {
+        padding: 0 20px 50px;
+        gap: 25px;
+      }
+      .product-card img {
+        height: 250px;
+      }
+      .cart {
+        padding: 25px 30px;
+        margin: 40px 15px 60px;
       }
       #checkout-form {
         margin: 20px 15px 0;
         padding: 20px;
-        max-width: 100%;
-      }
-      #checkout-form label {
-        font-size: 14px;
-      }
-      #checkout-form input,
-      #checkout-form textarea {
-        font-size: 14px;
-        padding: 10px 12px;
-      }
-      #checkout-form button {
-        font-size: 18px;
-        padding: 12px 0;
-      }
-      footer {
-        font-size: 14px;
-        padding: 20px 15px;
       }
     }
   </style>
@@ -509,129 +473,131 @@
       <p>$34.99</p>
       <button onclick="addToCart('Compact Sling Bag', 34.99, 'product4.jpg')" aria-label="Add Compact Sling Bag to cart">Add to Cart</button>
     </article>
+    <article class="product-card" role="listitem" tabindex="0" aria-label="Elegant Tote Bag for $69.99">
+      <img src="product5.jpg" alt="Elegant Tote Bag" loading="lazy" />
+      <h3>Elegant Tote Bag</h3>
+      <p>$69.99</p>
+      <button onclick="addToCart('Elegant Tote Bag', 69.99, 'product5.jpg')" aria-label="Add Elegant Tote Bag to cart">Add to Cart</button>
+    </article>
+    <article class="product-card" role="listitem" tabindex="0" aria-label="Leather Messenger Bag for $79.99">
+      <img src="product6.jpg" alt="Leather Messenger Bag" loading="lazy" />
+      <h3>Leather Messenger Bag</h3>
+      <p>$79.99</p>
+      <button onclick="addToCart('Leather Messenger Bag', 79.99, 'product6.jpg')" aria-label="Add Leather Messenger Bag to cart">Add to Cart</button>
+    </article>
   </div>
 
-  <section class="cart" id="cart" aria-live="polite" aria-atomic="true">
+  <section class="cart" id="cart" aria-label="Shopping Cart">
     <h2>Your Cart</h2>
-    <ul id="cart-items" tabindex="0" aria-label="Shopping cart items">
-      <!-- Cart items added here dynamically -->
-    </ul>
-    <div class="total" id="cart-total">Total: $0.00</div>
-    <button id="checkout-btn" aria-controls="checkout-form" aria-expanded="false" onclick="toggleCheckout()">Proceed to Checkout</button>
-    <div id="success-message" role="alert"></div>
+    <ul id="cart-items" tabindex="0" aria-live="polite" aria-relevant="additions removals"></ul>
+    <div class="total" aria-live="polite" aria-atomic="true">Total: $0.00</div>
+    <button id="checkout-btn" aria-controls="checkout-form" aria-expanded="false" aria-haspopup="dialog">Proceed to Checkout</button>
+
+    <form id="checkout-form" aria-label="Checkout Form" role="form" novalidate>
+      <label for="name">Full Name *</label>
+      <input type="text" id="name" name="name" required aria-required="true" placeholder="John Doe" />
+      
+      <label for="email">Email *</label>
+      <input type="email" id="email" name="email" required aria-required="true" placeholder="john@example.com" />
+      
+      <label for="address">Address *</label>
+      <textarea id="address" name="address" rows="3" required aria-required="true" placeholder="1234 Main St, City, Country"></textarea>
+      
+      <button type="submit">Submit Order</button>
+    </form>
+
+    <div id="success-message" role="alert" aria-live="assertive">Thank you for your order! We will contact you soon.</div>
   </section>
-
-  <form id="checkout-form" aria-label="Checkout form" onsubmit="submitOrder(event)">
-    <label for="name">Full Name</label>
-    <input type="text" id="name" name="name" required placeholder="Your full name" />
-
-    <label for="email">Email Address</label>
-    <input type="email" id="email" name="email" required placeholder="your.email@example.com" />
-
-    <label for="address">Shipping Address</label>
-    <textarea id="address" name="address" required placeholder="Your shipping address" rows="3"></textarea>
-
-    <button type="submit">Place Order</button>
-  </form>
 
   <footer>
     <p>© 2025 SA BagStore. All rights reserved.</p>
-    <p>Contact: support@sabagstore.com</p>
+    <p>Contact us: info@sabagstore.com | +1 (555) 123-4567</p>
   </footer>
 
   <script>
-    const cartItemsEl = document.getElementById('cart-items');
-    const cartTotalEl = document.getElementById('cart-total');
-    const successMessageEl = document.getElementById('success-message');
-    const checkoutBtn = document.getElementById('checkout-btn');
-    const checkoutForm = document.getElementById('checkout-form');
-
+    // Shopping cart array
     let cart = [];
 
-    function addToCart(name, price, imgSrc) {
-      const existingItem = cart.find(item => item.name === name);
-      if (existingItem) {
-        existingItem.qty++;
-      } else {
-        cart.push({name, price, imgSrc, qty: 1});
-      }
-      renderCart();
-      successMessageEl.style.display = 'none';
-      checkoutForm.style.display = 'none';
-      checkoutBtn.setAttribute('aria-expanded', 'false');
-    }
+    function updateCart() {
+      const cartItems = document.getElementById('cart-items');
+      const totalEl = document.querySelector('.total');
+      cartItems.innerHTML = '';
 
-    function renderCart() {
-      cartItemsEl.innerHTML = '';
       if (cart.length === 0) {
-        cartItemsEl.innerHTML = '<li>Your cart is empty.</li>';
-        cartTotalEl.textContent = 'Total: $0.00';
+        cartItems.innerHTML = '<li>Your cart is empty.</li>';
+        totalEl.textContent = 'Total: $0.00';
         return;
       }
+
       let total = 0;
-      cart.forEach(({name, price, imgSrc, qty}, index) => {
-        total += price * qty;
+      cart.forEach((item, index) => {
+        total += item.price;
+
         const li = document.createElement('li');
         li.innerHTML = `
-          <img src="${imgSrc}" alt="${name}" />
-          <span>${name} (x${qty})</span>
-          <span>$${(price * qty).toFixed(2)}</span>
-          <button class="remove" aria-label="Remove ${name} from cart" onclick="removeFromCart(${index})">Remove</button>
+          <img src="${item.img}" alt="${item.name}" />
+          <span>${item.name} - $${item.price.toFixed(2)}</span>
+          <button class="remove" aria-label="Remove ${item.name} from cart" onclick="removeFromCart(${index})">Remove</button>
         `;
-        cartItemsEl.appendChild(li);
+        cartItems.appendChild(li);
       });
-      cartTotalEl.textContent = `Total: $${total.toFixed(2)}`;
+
+      totalEl.textContent = `Total: $${total.toFixed(2)}`;
+    }
+
+    function addToCart(name, price, img) {
+      cart.push({ name, price, img });
+      updateCart();
     }
 
     function removeFromCart(index) {
       cart.splice(index, 1);
-      renderCart();
-      successMessageEl.style.display = 'none';
-      checkoutForm.style.display = 'none';
-      checkoutBtn.setAttribute('aria-expanded', 'false');
+      updateCart();
     }
 
-    function toggleCheckout() {
-      if (cart.length === 0) {
-        alert("Your cart is empty! Please add items before checking out.");
-        return;
-      }
-      const isVisible = checkoutForm.style.display === 'block';
-      checkoutForm.style.display = isVisible ? 'none' : 'block';
-      successMessageEl.style.display = 'none';
-      checkoutBtn.setAttribute('aria-expanded', !isVisible);
-      checkoutForm.scrollIntoView({behavior: 'smooth'});
-    }
+    // Checkout form toggle
+    const checkoutBtn = document.getElementById('checkout-btn');
+    const checkoutForm = document.getElementById('checkout-form');
+    const successMessage = document.getElementById('success-message');
 
-    function submitOrder(event) {
-      event.preventDefault();
+    checkoutBtn.addEventListener('click', () => {
       if (cart.length === 0) {
-        alert("Your cart is empty! Please add items before placing order.");
+        alert('Your cart is empty. Add products before checking out.');
         return;
       }
-      const name = event.target.name.value.trim();
-      const email = event.target.email.value.trim();
-      const address = event.target.address.value.trim();
-      if (!name || !email || !address) {
-        alert("Please fill all fields.");
-        return;
-      }
-      // Simulate order processing delay
-      setTimeout(() => {
-        successMessageEl.textContent = `Thank you, ${name}! Your order has been placed successfully.`;
-        successMessageEl.style.display = 'block';
-        cart = [];
-        renderCart();
+      const expanded = checkoutBtn.getAttribute('aria-expanded') === 'true';
+      checkoutBtn.setAttribute('aria-expanded', String(!expanded));
+      if (checkoutForm.style.display === 'block') {
         checkoutForm.style.display = 'none';
-        checkoutBtn.setAttribute('aria-expanded', 'false');
-        checkoutForm.reset();
-        checkoutBtn.scrollIntoView({behavior: 'smooth'});
-      }, 1000);
-    }
+        successMessage.style.display = 'none';
+      } else {
+        checkoutForm.style.display = 'block';
+        successMessage.style.display = 'none';
+        checkoutForm.querySelector('input, textarea').focus();
+      }
+    });
 
-    // Initial cart render
-    renderCart();
+    // Handle form submission
+    checkoutForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      if (!checkoutForm.checkValidity()) {
+        checkoutForm.reportValidity();
+        return;
+      }
+
+      // In real use, here you would send data to server via AJAX/fetch
+      // For now, just simulate success
+      cart = [];
+      updateCart();
+      checkoutForm.reset();
+      checkoutForm.style.display = 'none';
+      successMessage.style.display = 'block';
+      checkoutBtn.setAttribute('aria-expanded', 'false');
+    });
+
+    // Initial cart update
+    updateCart();
   </script>
-
 </body>
 </html>
